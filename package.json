@@ -1,0 +1,24 @@
+{
+  "name": "realtime-in-house-mvp",
+  "version": "1.0.0",
+  "description": "MVP experimental de conversación por voz en tiempo real",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "install:all": "pnpm install"
+  },
+  "keywords": [
+    "realtime",
+    "voice",
+    "websocket",
+    "streaming"
+  ],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.6.3",
+  "dependencies": {
+    "@deepgram/sdk": "^4.11.3"
+  }
+}

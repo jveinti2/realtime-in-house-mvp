@@ -1,0 +1,25 @@
+{
+  "name": "realtime-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Backend WebSocket para MVP de conversación en tiempo real",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "keywords": [
+    "websocket",
+    "realtime",
+    "voice"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@deepgram/sdk": "^4.11.3",
+    "dotenv": "^17.2.3",
+    "express": "^5.0.1",
+    "openai": "^6.14.0",
+    "ws": "^8.18.0"
+  }
+}
