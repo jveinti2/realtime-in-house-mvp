@@ -37,6 +37,21 @@ const initializeSTT = async () => {
   }
 
   sttService.onTranscription(async (data) => {
+    if (data.type === "partial") {
+      clients.forEach((client) => {
+        if (client.readyState === 1) {
+          client.send(
+            JSON.stringify({
+              type: "transcript_partial",
+              text: data.text,
+              timestamp: Date.now(),
+            })
+          );
+        }
+      });
+      return;
+    }
+
     if (data.type === "done") {
       if (userSpeechBuffer) {
         userSpeechBuffer += " " + data.text;

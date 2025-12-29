@@ -11,6 +11,7 @@ function App() {
     disconnect,
     sendAudioChunk,
     currentTranscript,
+    partialTranscript,
     currentLLMResponse,
     enabledSTT,
     enabledLLM,
@@ -125,7 +126,13 @@ function App() {
               <small>Speech to Text</small>
             </div>
             <div id="box-process-stt">
-              {currentTranscript}
+              {partialTranscript ? (
+                <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>
+                  {partialTranscript}
+                </span>
+              ) : (
+                currentTranscript
+              )}
             </div>
           </div>
 

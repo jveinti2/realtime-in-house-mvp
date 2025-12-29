@@ -38,24 +38,23 @@ export class DeepgramAdapter extends BaseSTTAdapter {
 
     this.connection.on(LiveTranscriptionEvents.Transcript, (data) => {
       const transcript = data.channel?.alternatives?.[0]?.transcript;
-      console.log(`------> transcript json completo: ${JSON.stringify(data)}`);
-
       const isFinal = data.is_final;
-      const speechFinal = data.speech_final;
 
       if (transcript) {
-        // console.log(
-        //   `[Deepgram] ${isFinal ? "FINAL" : "INTERIM"}: ${transcript}`
-        // );
-      }
-
-      if (isFinal && transcript) {
-        this.notifyTranscription({
-          type: "done",
-          text: transcript,
-          confidence: data.channel?.alternatives?.[0]?.confidence,
-          isFinal: true,
-        });
+        if (!isFinal) {
+          this.notifyTranscription({
+            type: "partial",
+            text: transcript,
+            isFinal: false,
+          });
+        } else {
+          this.notifyTranscription({
+            type: "done",
+            text: transcript,
+            confidence: data.channel?.alternatives?.[0]?.confidence,
+            isFinal: true,
+          });
+        }
       }
     });
 

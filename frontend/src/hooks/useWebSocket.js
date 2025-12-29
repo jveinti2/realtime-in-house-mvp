@@ -7,6 +7,7 @@ export function useWebSocket() {
   const wsRef = useRef(null);
   const [error, setError] = useState(null);
   const [currentTranscript, setCurrentTranscript] = useState('');
+  const [partialTranscript, setPartialTranscript] = useState('');
   const [currentLLMResponse, setCurrentLLMResponse] = useState('');
   const currentTranscriptRef = useRef('');
   const currentLLMResponseRef = useRef('');
@@ -104,7 +105,10 @@ export function useWebSocket() {
             const message = JSON.parse(event.data);
             console.log('Mensaje parseado:', message);
 
-            if (message.type === 'transcript_done') {
+            if (message.type === 'transcript_partial') {
+              setPartialTranscript(message.text);
+            } else if (message.type === 'transcript_done') {
+              setPartialTranscript('');
               if (currentLLMResponseRef.current) {
                 currentLLMResponseRef.current = '';
                 setCurrentLLMResponse('');
@@ -187,6 +191,7 @@ export function useWebSocket() {
     sendMessage,
     sendAudioChunk,
     currentTranscript,
+    partialTranscript,
     currentLLMResponse,
     enabledSTT,
     enabledLLM,
