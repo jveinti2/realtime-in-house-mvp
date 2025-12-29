@@ -175,3 +175,92 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* VoiceAgent LiveKit styles */
+.voice-agent-ui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 32px;
+  background: #0f172a;
+  border-radius: 16px;
+  border: 1px solid #1e293b;
+}
+
+.visualizer-container {
+  width: 100%;
+  max-width: 400px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.state-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.state-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.connection-state {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.voice-agent-error {
+  text-align: center;
+  padding: 32px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+}
+
+.voice-agent-error button {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.voice-agent-error button:hover {
+  background: #2563eb;
+}
+
+.voice-agent-loading {
+  text-align: center;
+  padding: 48px;
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+/* LiveKit control bar overrides */
+[data-lk-theme="default"] {
+  --lk-bg: #0f172a;
+  --lk-bg2: #1e293b;
+  --lk-fg: #e5e7eb;
+  --lk-fg2: #94a3b8;
+  --lk-border-color: #334155;
+}
+
+.lk-voice-assistant-control-bar {
+  margin-top: 16px;
+}

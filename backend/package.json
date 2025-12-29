@@ -6,7 +6,9 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "node --watch src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "dev:agent": "node src/agent.js dev",
+    "dev:token": "node src/token.js"
   },
   "keywords": [
     "websocket",
@@ -17,8 +19,14 @@
   "license": "MIT",
   "dependencies": {
     "@deepgram/sdk": "^4.11.3",
+    "@livekit/agents": "^1.0.31",
+    "@livekit/agents-plugin-deepgram": "^1.0.31",
+    "@livekit/agents-plugin-openai": "^1.0.31",
+    "@livekit/agents-plugin-silero": "^1.0.31",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.0.1",
+    "livekit-server-sdk": "^2.15.0",
     "openai": "^6.14.0",
     "ws": "^8.18.0"
   }

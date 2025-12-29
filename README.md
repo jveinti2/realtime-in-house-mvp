@@ -1,148 +1,95 @@
-# Realtime-In-House-MVP
+# Realtime Voice MVP
 
-## Descripción
+Voice AI experimental usando LiveKit Agents.
 
-**Realtime-In-House-MVP** es un proyecto experimental cuyo objetivo es **validar una arquitectura de conversación por voz en cuasi-tiempo real**, priorizando **latencia percibida mínima** y **flujo continuo de audio**, similar a plataformas de voice-AI en tiempo real.
+## Stack
 
-El proyecto **no busca precisión perfecta**, sino **naturalidad, inmediatez y streaming end-to-end**.
+- **LiveKit Agents**: Framework de voice AI en tiempo real
+- **Silero VAD**: Detección de voz local (baja latencia)
+- **Deepgram STT**: Transcripción en español (modelo nova-2)
+- **OpenAI GPT-4o-mini**: LLM para respuestas
+- **OpenAI TTS**: Síntesis de voz
 
----
+## Requisitos
 
-## Objetivo
+- Node.js 18+
+- pnpm
+- Cuenta LiveKit Cloud (gratis para desarrollo)
+- API keys: Deepgram, OpenAI
 
-Demostrar que es posible construir una conversación por voz **speech-to-speech** sin pipelines bloqueantes, utilizando:
+## Setup
 
-- Audio chunked desde el cliente
-- Transcripción incremental
-- Inferencia LLM en streaming
-- Síntesis de voz incremental
-- Comunicación bidireccional persistente
+1. Configurar variables de entorno en `backend/.env`:
 
----
+```
+LIVEKIT_URL=wss://your-project.livekit.cloud
+LIVEKIT_API_KEY=your-key
+LIVEKIT_API_SECRET=your-secret
+DEEPGRAM_API_KEY=your-key
+OPENAI_API_KEY=your-key
+```
 
-## Alcance del MVP
+2. Instalar dependencias:
 
-Incluye:
+```bash
+cd backend && pnpm install
+cd frontend && pnpm install
+```
 
-- Cliente web simple en React
-- Backend con WebSocket persistente
-- Flujo completo audio → texto → razonamiento → audio
-- Streaming en todas las etapas
+## Ejecutar
 
-No incluye (intencionalmente):
+Necesitas 3 terminales:
 
-- Escalabilidad horizontal
-- Manejo avanzado de turn-taking
-- Persistencia de estado
-- Autenticación
-- Producción / hardening
+```bash
+# Terminal 1 - Token server
+cd backend && pnpm dev:token
 
----
+# Terminal 2 - Agent worker
+cd backend && pnpm dev:agent
 
-## Arquitectura General
+# Terminal 3 - Frontend
+cd frontend && pnpm dev
+```
 
-[ Micrófono ]
-│
-▼
-[ React Client ]
-│ (audio chunks)
-▼
-[ WebSocket Backend ]
-│
-├─► Streaming STT (parciales)
-│
-├─► Streaming LLM (tokens)
-│
-└─► Streaming TTS (audio)
-▼
-[ Audio de respuesta en tiempo real ]
+Abre http://localhost:5173 en el navegador.
 
-**Principio clave:**  
-Ningún componente espera a que el anterior termine.
+## Arquitectura
 
----
+```
+[Browser] <--WebRTC--> [LiveKit Cloud] <--WebRTC--> [Agent Worker]
+                                                         │
+                                                    ┌────┴────┐
+                                                    │ Silero  │
+                                                    │   VAD   │
+                                                    └────┬────┘
+                                                         │
+                                             ┌───────────┼───────────┐
+                                             ▼           ▼           ▼
+                                        [Deepgram]  [OpenAI]   [OpenAI]
+                                           STT        LLM        TTS
+```
 
-## Flujo de Datos
+## Estructura del Proyecto
 
-1. El cliente captura audio y lo envía en **chunks pequeños (20–50 ms)**.
-2. El backend reenvía el audio a un **STT en streaming**.
-3. El STT emite **transcripciones parciales**.
-4. Las transcripciones parciales se envían inmediatamente al **LLM en modo streaming**.
-5. El LLM produce tokens incrementales.
-6. Los tokens se agrupan mínimamente y se envían al **TTS incremental**.
-7. El TTS devuelve audio en streaming.
-8. El backend envía el audio al cliente sin esperar el mensaje completo.
+```
+backend/
+  src/
+    agent.js      # LiveKit Agent worker
+    token.js      # Token server para autenticación
+frontend/
+  src/
+    components/
+      VoiceAgent.jsx  # Componente principal LiveKit
+    App.jsx
+```
 
----
+## Características
 
-## Stack Tecnológico (propuesto)
-
-### Frontend
-
-- React
-- Web Audio API
-- WebSocket nativo
-
-### Backend
-
-- Node.js (proceso persistente)
-- WebSocket (sin REST intermedio)
-- Event-driven architecture
-
-### IA (intercambiable)
-
-- STT con soporte de streaming parcial
-- LLM con input/output incremental
-- TTS con generación de audio en streaming
-
-> Los proveedores son intercambiables siempre que **cumplan contratos de streaming real**.
-
----
-
-## Principios de Diseño
-
-- **Streaming first**: todo es incremental
-- **Sin await secuencial**
-- **Estado en memoria**
-- **Baja latencia percibida > precisión**
-- **Procesos siempre vivos (no serverless)**
-
----
-
-## Limitaciones Conocidas
-
-- Turn-taking básico
-- Sin cancelación avanzada (barge-in limitado)
-- Latencia variable según proveedor de IA
-- No apto para producción
-
-Estas limitaciones son aceptadas por tratarse de un **MVP experimental**.
-
----
-
-## Objetivo del Aprendizaje
-
-Este proyecto busca responder:
-
-- ¿Qué tan cerca se puede llegar a una experiencia tipo Vapi?
-- ¿Dónde aparece la latencia real?
-- ¿Qué partes son arquitectónicas y no de modelo?
-- ¿Qué complejidad es razonable asumir en un proyecto propio?
-
----
-
-## Estado del Proyecto
-
-🚧 En desarrollo / experimental
-
----
-
-## Disclaimer
-
-Este proyecto **no intenta competir ni replicar plataformas comerciales**.  
-Es una prueba técnica para comprender los límites reales del streaming speech-to-speech.
-
----
+- Turn detection inteligente (semántico, no solo silencio)
+- VAD local con Silero (sin latencia de red)
+- Manejo de interrupciones (barge-in)
+- WebRTC optimizado para baja latencia
+- Reconexión automática
 
 ## Licencia
 
