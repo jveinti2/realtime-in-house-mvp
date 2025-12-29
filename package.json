@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "pnpm --parallel -r dev",
     "dev:frontend": "pnpm --filter frontend dev",
-    "dev:backend": "pnpm --filter backend dev",
+    "dev:token": "pnpm --filter backend dev:token",
+    "dev:agent": "pnpm --filter backend dev:agent",
     "install:all": "pnpm install"
   },
   "keywords": [

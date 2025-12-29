@@ -9,10 +9,8 @@ function App() {
         <p>Voice AI con turn detection inteligente</p>
       </header>
 
-      <main className="main" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <section className="panel" style={{ maxWidth: '600px', width: '100%' }}>
-          <VoiceAgent />
-        </section>
+      <main>
+        <VoiceAgent />
       </main>
 
       <footer className="footer">

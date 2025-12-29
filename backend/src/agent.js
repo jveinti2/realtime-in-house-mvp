@@ -37,9 +37,18 @@ export default defineAgent({
     await session.start({
       room: ctx.room,
       agent,
+      outputOptions: {
+        transcriptionEnabled: true,
+      },
     });
 
     await ctx.connect();
+
+    // Solo logs para debugging - transcripciones van automáticamente al frontend via useTranscriptions
+    session.on(voice.AgentSessionEventTypes.ConversationItemAdded, (ev) => {
+      const { role, content } = ev.item;
+      console.log(`${role === "user" ? "📝 Usuario" : "🤖 Agente"}: ${content}`);
+    });
   },
 });
 
